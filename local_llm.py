@@ -8,13 +8,13 @@ def check_groq_available():
     return False
 
 def get_active_backend_label():
-    """الدالة المفقودة: تخبر الواجهة بنوع الاتصال النشط"""
     return "السحابي (Google Gemini)"
 
-def ask_local_llm(prompt, system_prompt="", image_bytes=None):
+def ask_local_llm(prompt, system_prompt="", image_bytes=None, image_paths=None):
     return ask_gemini_cloud(prompt, system_prompt)
 
-def offline_chat(prompt, system_prompt="", image_bytes=None):
+def offline_chat(prompt, system_prompt="", image_bytes=None, image_paths=None):
+    """أضفنا هنا كلا المتغيرين لكي يتقبل الملف أي قيمة يرسلها app.py"""
     return ask_gemini_cloud(prompt, system_prompt)
 
 def ask_gemini_cloud(prompt, system_prompt):
