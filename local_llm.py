@@ -1,10 +1,6 @@
 import streamlit as st
 import os
-
-try:
-    from groq import Groq
-except ImportError:
-    pass
+from groq import Groq
 
 def check_ollama_available():
     return False
@@ -22,22 +18,18 @@ def offline_chat(prompt, system_prompt="", image_bytes=None, image_paths=None):
     return ask_groq_cloud(prompt, system_prompt)
 
 def ask_groq_cloud(prompt, system_prompt):
-    # جلب مفتاح Groq الأصلي من الـ Secrets
     api_key = st.secrets.get("GROQ_API_KEY")
     if not api_key:
         return "⚠️ خطأ: لم يتم العثور على مفتاح GROQ_API_KEY في إعدادات Secrets الخاصة بالسيرفر."
     
     try:
-        # تشغيل عميل Groq الرسمي
         client = Groq(api_key=api_key)
         
-        # تجهيز الرسائل
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
         
-        # استدعاء نموذج Llama 3 السريع والمستقر جداً
         completion = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=messages,
@@ -47,3 +39,4 @@ def ask_groq_cloud(prompt, system_prompt):
         return completion.choices[0].message.content
     except Exception as e:
         return f"🚨 خطأ أثناء استدعاء Groq: {str(e)}"
+        
