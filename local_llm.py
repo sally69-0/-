@@ -21,7 +21,7 @@ def ask_gemini_cloud(prompt, system_prompt):
     api_key = st.secrets.get("GEMINI_API_KEY")
     if not api_key:
         return "⚠️ خطأ: لم يتم العثور على مفتاح GEMINI_API_KEY في إعدادات Secrets الخاصة بالسيرفر."
-    
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
     headers = {'Content-Type': 'application/json'}
     payload = {
