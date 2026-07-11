@@ -36,7 +36,7 @@ def ask_gemini_cloud(prompt, system_prompt):
         
         # استدعاء الموديل المستقر والسريع
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-2.0-flash',
             contents=full_prompt,
         )
         return response.text
