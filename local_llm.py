@@ -2,23 +2,23 @@ import streamlit as st
 import requests
 
 def check_ollama_available():
-    """يرجع False دائماً على السيرفر لكي يجبر التطبيق على الانتقال للأونلاين"""
+    """ترجع False لتعطيل الاتصال المحلي على السيرفر السحابي"""
     return False
 
 def check_groq_available():
-    """يرجع False لكي نتفادى حظر Groq ونعبر مباشرة لـ Gemini"""
+    """ترجع False لتجاوز حظر Groq والانتقال مباشرة لـ Gemini"""
     return False
 
 def ask_local_llm(prompt, system_prompt="", image_bytes=None):
-    """الدالة الأساسية لاستقبال السؤال والتحويل لـ Gemini"""
+    """الدالة الأساسية وتوجه مباشرة لـ Gemini"""
     return ask_gemini_cloud(prompt, system_prompt)
 
 def offline_chat(prompt, system_prompt="", image_bytes=None):
-    """هذه الدالة يطلبها ملف app.py في السطر 19، قمنا بربطها بـ Gemini مباشرة"""
+    """الدالة التي يطلبها app.py في السطر 19، ربطناها بـ Gemini"""
     return ask_gemini_cloud(prompt, system_prompt)
 
 def ask_gemini_cloud(prompt, system_prompt):
-    # جلب مفتاح Gemini من الـ Secrets
+    # جلب المفتاح الآمن من Secrets
     api_key = st.secrets.get("GEMINI_API_KEY")
     
     if not api_key:
@@ -46,4 +46,3 @@ def ask_gemini_cloud(prompt, system_prompt):
             return f"❌ خطأ من خادم Google Gemini (كود الخطأ: {res.status_code})"
     except Exception as e:
         return f"🚨 تعذر الاتصال بالنموذج السحابي: {str(e)}"
-        
