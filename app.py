@@ -16,7 +16,7 @@ import pandas as pd
 import streamlit as st
 
 from database import get_memory
-from local_llm import offline_chat, check_ollama_available
+from local_llm import offline_chat, check_ollama_available, check_groq_available, get_active_backend_label
 from web_intelligence import has_internet, build_context_from_search, fact_check_claim
 from multimodal_processor import (
     save_uploaded_image, parse_excel_data, build_combined_matrix,
@@ -86,9 +86,20 @@ with st.sidebar:
 
     st.markdown("### حالة الأنظمة")
     ollama_ok = check_ollama_available()
+    groq_ok = check_groq_available()
     internet_ok = has_internet()
     st.write(f"🖥️ Ollama محلي: {'✅ متصل' if ollama_ok else '❌ غير متاح'}")
+    st.write(f"☁️ نموذج Groq الاحتياطي: {'✅ مُعرَّف' if groq_ok else '❌ غير مُعرَّف'}")
     st.write(f"🌐 الإنترنت: {'✅ متوفر' if internet_ok else '❌ غير متوفر'}")
+    st.info(f"**المصدر النشط الآن:** {get_active_backend_label()}")
+
+    if not ollama_ok and not groq_ok:
+        st.warning(
+            "لا يوجد أي مصدر ذكاء اصطناعي متاح حالياً. إن كنت تنشر التطبيق على "
+            "Streamlit Cloud (حيث لا يوجد Ollama)، أضف مفتاح Groq مجاني من "
+            "[console.groq.com](https://console.groq.com) في إعدادات **Secrets** بالشكل:\n\n"
+            '```\nGROQ_API_KEY = "gsk_xxxxxxxx"\n```'
+        )
 
     process = psutil.Process(os.getpid())
     mem_mb = process.memory_info().rss / (1024 * 1024)
@@ -181,7 +192,7 @@ with tab_chat:
             image_paths = [save_uploaded_image(f) for f in attach_images]
 
         with st.chat_message("assistant"):
-            with st.spinner("🤖 يفكّر ويحلل (نموذج محلي عبر Ollama)..."):
+            with st.spinner(f"🤖 يفكّر ويحلل ({get_active_backend_label()})..."):
                 chat_hist_for_llm = [{"role": m["role"], "content": m["content"]} for m in history]
                 answer = offline_chat(full_prompt, chat_hist_for_llm, image_paths=image_paths)
                 st.markdown(answer)
