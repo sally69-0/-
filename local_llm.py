@@ -7,6 +7,10 @@ def check_ollama_available():
 def check_groq_available():
     return False
 
+def get_active_backend_label():
+    """الدالة المفقودة: تخبر الواجهة بنوع الاتصال النشط"""
+    return "السحابي (Google Gemini)"
+
 def ask_local_llm(prompt, system_prompt="", image_bytes=None):
     return ask_gemini_cloud(prompt, system_prompt)
 
@@ -32,3 +36,4 @@ def ask_gemini_cloud(prompt, system_prompt):
             return f"❌ خطأ من خادم غوغل (كود الخطأ: {res.status_code})"
     except Exception as e:
         return f"🚨 تعذر الاتصال بالنموذج السحابي: {str(e)}"
+        
